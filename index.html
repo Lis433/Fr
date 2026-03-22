@@ -6,35 +6,64 @@
   <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
 
   <script>
-    // ✅ 0. 리다이렉트 (허용된 것만)
+    // ✅ 1. 리다이렉트 (pack15 완전 차단)
     const params = new URLSearchParams(window.location.search);
     const redirectUrl = params.get('url');
 
-    if (redirectUrl) {
-      if (
-        redirectUrl.startsWith("https://open.kakao.com") ||
-        redirectUrl.startsWith("https://www.youtube.com")
-      ) {
-        window.location.href = redirectUrl;
+    const isKakao = navigator.userAgent.includes("KAKAOTALK");
+
+    if (redirectUrl && !isKakao) {
+      // 🔥 pack15 차단
+      if (redirectUrl.includes("pack15.github.io")) {
+        location.href = "https://lis433.github.io/real/";
+      }
+
+      // 허용된 링크만 이동
+      else if (redirectUrl.startsWith("https://open.kakao.com")) {
+        location.href = redirectUrl;
       }
     }
 
-    // ✅ 1. SDK 초기화
+    // ✅ 2. SDK 초기화
     window.onload = function () {
       if (!Kakao.isInitialized()) {
         Kakao.init('ba4848b56b49c8826ad4113e55670941');
       }
     };
 
-    // ✅ 2. 공유 함수
+    // ✅ 3. 공유 함수
     function sendLink() {
-      const v = Date.now();
+      const v = Date.now(); // 캐시 완전 방지
 
       Kakao.Link.sendDefault({
         objectType: 'feed',
         content: {
           title: '뚜레쥬르',
           description: '스트로베리 케이크',
+          imageUrl: 'https://lrl.kr/bCEko',
+          link: {
+            mobileWebUrl: `https://lis433.github.io/real/?v=${v}&url=https://open.kakao.com/o/sEZjJA6g`,
+            webUrl: `https://lis433.github.io/real/?v=${v}&url=https://open.kakao.com/o/sEZjJA6g`,
+          },
+        },
+        buttons: [
+          {
+            title: '선물 받기',
+            link: {
+              mobileWebUrl: `https://lis433.github.io/real/?v=${v}&url=https://open.kakao.com/o/sEZjJA6g`,
+              webUrl: `https://lis433.github.io/real/?v=${v}&url=https://open.kakao.com/o/sEZjJA6g`,
+            },
+          },
+        ],
+      });
+    }
+  </script>
+</head>
+
+<body>
+  <button onclick="sendLink()">카카오톡으로 공유</button>
+</body>
+</html>          description: '스트로베리 케이크',
           imageUrl: 'https://lrl.kr/bCEko',
           link: {
             mobileWebUrl: `https://lis433.github.io/real/?v=${v}&url=https://open.kakao.com/o/sEZjJA6g`,
